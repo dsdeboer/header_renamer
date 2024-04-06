@@ -1,0 +1,12 @@
+displayName: Header Rename
+type: middleware
+iconPath: .assets/icon.png
+
+import: github.com/dsdeboer/traefik-header-rename
+
+summary: 'Request Header renamer'
+
+testData:
+  Headers:
+    X-Demo: test
+    X-URL: '{{URL}}'
