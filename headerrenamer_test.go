@@ -1,24 +1,22 @@
-package traefik_header_rename_test
+package traefik_header_rename
 
 import (
 	"context"
 	"net/http"
 	"net/http/httptest"
 	"testing"
-
-	headerrenamer "github.com/dsdeboer/traefik-header-rename"
 )
 
 func TestHeaderRename(t *testing.T) {
 	tests := []struct {
 		name    string
-		rule    headerrenamer.Rule
+		rule    Rule
 		headers map[string]string
 		want    map[string]string
 	}{
 		{
 			name: "[Rename] no transformation",
-			rule: headerrenamer.Rule{
+			rule: Rule{
 				Header: "not-existing",
 			},
 			headers: map[string]string{
@@ -30,7 +28,7 @@ func TestHeaderRename(t *testing.T) {
 		},
 		{
 			name: "[Rename] one transformation",
-			rule: headerrenamer.Rule{
+			rule: Rule{
 				Header: "Test",
 				Value:  "X-Testing",
 			},
@@ -45,7 +43,7 @@ func TestHeaderRename(t *testing.T) {
 		},
 		{
 			name: "[Rename] Deletion",
-			rule: headerrenamer.Rule{
+			rule: Rule{
 				Header: "Test",
 			},
 			headers: map[string]string{
@@ -59,7 +57,7 @@ func TestHeaderRename(t *testing.T) {
 		},
 		{
 			name: "[Rename] no transformation with HeaderPrefix",
-			rule: headerrenamer.Rule{
+			rule: Rule{
 				Header:       "not-existing",
 				Value:        "^unused",
 				HeaderPrefix: "^",
@@ -73,7 +71,7 @@ func TestHeaderRename(t *testing.T) {
 		},
 		{
 			name: "[Rename] one transformation",
-			rule: headerrenamer.Rule{
+			rule: Rule{
 				Header:       "Test",
 				Value:        "^X-Dest-Header",
 				HeaderPrefix: "^",
@@ -92,13 +90,13 @@ func TestHeaderRename(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			cfg := headerrenamer.CreateConfig()
-			cfg.Rules = []headerrenamer.Rule{tt.rule}
+			cfg := CreateConfig()
+			cfg.Rules = []Rule{tt.rule}
 
 			ctx := context.Background()
 			next := http.HandlerFunc(func(_ http.ResponseWriter, _ *http.Request) {})
 
-			handler, err := headerrenamer.New(ctx, next, cfg, "demo-headerrenamerin")
+			handler, err := New(ctx, next, cfg, "demo-headerrenamerin")
 			if err != nil {
 				t.Fatal(err)
 			}

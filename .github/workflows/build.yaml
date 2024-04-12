@@ -15,7 +15,7 @@ jobs:
         name: Build
         runs-on: ubuntu-latest
         env:
-            GOLANGCI_LINT_VERSION: v1.50.0
+            GOLANGCI_LINT_VERSION: v1.57.2
             YAEGI_VERSION: v0.14.3
             ACTIONS_ALLOW_UNSECURE_COMMANDS: true
         steps:
