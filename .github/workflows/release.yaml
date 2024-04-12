@@ -12,7 +12,7 @@ jobs:
         with:
           cache: "yarn"
           node-version-file: ".nvmrc"
-      - uses: wagoid/commitlint-github-action@v5
+      - uses: wagoid/commitlint-github-action@v6
       - uses: bahmutov/npm-install@v1
       - run: npx semantic-release
         env:
