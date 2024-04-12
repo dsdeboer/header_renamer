@@ -23,7 +23,7 @@ jobs:
                 with:
                     fetch-depth: 10
             -   uses: wagoid/commitlint-github-action@v6
-            -   uses: actions/setup-go@v4
+            -   uses: actions/setup-go@v5
                 with:
                     go-version-file: ${{ github.workspace }}/go.mod
             -   uses: golangci/golangci-lint-action@v4
