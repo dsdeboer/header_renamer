@@ -19,7 +19,7 @@ jobs:
             YAEGI_VERSION: v0.14.3
             ACTIONS_ALLOW_UNSECURE_COMMANDS: true
         steps:
-            -   uses: actions/checkout@v3
+            -   uses: actions/checkout@v4
                 with:
                     fetch-depth: 10
             -   uses: wagoid/commitlint-github-action@v6
