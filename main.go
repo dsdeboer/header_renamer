@@ -9,20 +9,15 @@ import (
 	"strings"
 )
 
-// Config holds configuration to be passed to the plugin.
-type Config struct {
-	Rules []types.Rule
-}
-
 // CreateConfig populates the Config data object.
-func CreateConfig() *Config {
-	return &Config{
+func CreateConfig() *types.Config {
+	return &types.Config{
 		Rules: []types.Rule{},
 	}
 }
 
 // New created a new HeaderRenamer plugin.
-func New(_ context.Context, next http.Handler, config *Config, name string) (http.Handler, error) {
+func New(_ context.Context, next http.Handler, config *types.Config, name string) (http.Handler, error) {
 	return &HeaderRenamer{
 		rules: config.Rules,
 		next:  next,
