@@ -16,7 +16,7 @@ func TestHeaderRename(t *testing.T) {
 		want    map[string]string
 	}{
 		{
-			name: "[Rename] no transformation",
+			name: "no transformation",
 			rule: types.Rule{
 				Header: "not-existing",
 			},
@@ -28,7 +28,7 @@ func TestHeaderRename(t *testing.T) {
 			},
 		},
 		{
-			name: "[Rename] one transformation",
+			name: "one transformation",
 			rule: types.Rule{
 				Header: "Test",
 				Value:  "X-Testing",
@@ -43,7 +43,7 @@ func TestHeaderRename(t *testing.T) {
 			},
 		},
 		{
-			name: "[Rename] Deletion",
+			name: "Deletion",
 			rule: types.Rule{
 				Header: "Test",
 			},
@@ -57,7 +57,7 @@ func TestHeaderRename(t *testing.T) {
 			},
 		},
 		{
-			name: "[Rename] no transformation with HeaderPrefix",
+			name: "no transformation with HeaderPrefix",
 			rule: types.Rule{
 				Header:       "not-existing",
 				Value:        "^unused",
@@ -71,7 +71,7 @@ func TestHeaderRename(t *testing.T) {
 			},
 		},
 		{
-			name: "[Rename] one transformation",
+			name: "one transformation",
 			rule: types.Rule{
 				Header:       "Test",
 				Value:        "^X-Dest-Header",
