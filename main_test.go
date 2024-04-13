@@ -15,9 +15,9 @@ func TestHeaderRename(t *testing.T) {
 		want    map[string]string
 	}{
 		{
-			name: "[Rename] no transformation",
+			name: "no transformation",
 			rule: Rule{
-				Header: "not-existing",
+				OldHeader: "not-existing",
 			},
 			headers: map[string]string{
 				"Foo": "Bar",
@@ -27,10 +27,10 @@ func TestHeaderRename(t *testing.T) {
 			},
 		},
 		{
-			name: "[Rename] one transformation",
+			name: "one transformation",
 			rule: Rule{
-				Header: "Test",
-				Value:  "X-Testing",
+				OldHeader: "Test",
+				NewHeader: "X-Testing",
 			},
 			headers: map[string]string{
 				"Foo":  "Bar",
@@ -42,9 +42,9 @@ func TestHeaderRename(t *testing.T) {
 			},
 		},
 		{
-			name: "[Rename] Deletion",
+			name: "Deletion",
 			rule: Rule{
-				Header: "Test",
+				OldHeader: "Test",
 			},
 			headers: map[string]string{
 				"Foo":  "Bar",
@@ -56,35 +56,20 @@ func TestHeaderRename(t *testing.T) {
 			},
 		},
 		{
-			name: "[Rename] no transformation with HeaderPrefix",
+			name: "one transformation",
 			rule: Rule{
-				Header:       "not-existing",
-				Value:        "^unused",
-				HeaderPrefix: "^",
+				OldHeader: "Test",
+				NewHeader: "X-Testing",
 			},
 			headers: map[string]string{
-				"Foo": "Bar",
+				"Foo":              "Bar",
+				"Test":             "Success",
+				"X-Dest-OldHeader": "X-Testing",
 			},
 			want: map[string]string{
-				"Foo": "Bar",
-			},
-		},
-		{
-			name: "[Rename] one transformation",
-			rule: Rule{
-				Header:       "Test",
-				Value:        "^X-Dest-Header",
-				HeaderPrefix: "^",
-			},
-			headers: map[string]string{
-				"Foo":           "Bar",
-				"Test":          "Success",
-				"X-Dest-Header": "X-Testing",
-			},
-			want: map[string]string{
-				"Foo":           "Bar",
-				"X-Dest-Header": "X-Testing",
-				"X-Testing":     "Success",
+				"Foo":              "Bar",
+				"X-Dest-OldHeader": "X-Testing",
+				"X-Testing":        "Success",
 			},
 		},
 	}
