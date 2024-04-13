@@ -10,14 +10,14 @@ import (
 func TestHeaderRename(t *testing.T) {
 	tests := []struct {
 		name    string
-		rule    main.Rule
+		rule    Rule
 		headers map[string]string
 		want    map[string]string
 	}{
 		{
 			name: "no transformation",
-			rule: main.Rule{
-				Header: "not-existing",
+			rule: Rule{
+				OldHeader: "not-existing",
 			},
 			headers: map[string]string{
 				"Foo": "Bar",
@@ -28,9 +28,9 @@ func TestHeaderRename(t *testing.T) {
 		},
 		{
 			name: "one transformation",
-			rule: main.Rule{
-				Header: "Test",
-				Value:  "X-Testing",
+			rule: Rule{
+				OldHeader: "Test",
+				NewHeader: "X-Testing",
 			},
 			headers: map[string]string{
 				"Foo":  "Bar",
@@ -43,8 +43,8 @@ func TestHeaderRename(t *testing.T) {
 		},
 		{
 			name: "Deletion",
-			rule: main.Rule{
-				Header: "Test",
+			rule: Rule{
+				OldHeader: "Test",
 			},
 			headers: map[string]string{
 				"Foo":  "Bar",
@@ -56,42 +56,27 @@ func TestHeaderRename(t *testing.T) {
 			},
 		},
 		{
-			name: "no transformation with HeaderPrefix",
-			rule: main.Rule{
-				Header:       "not-existing",
-				Value:        "^unused",
-				HeaderPrefix: "^",
-			},
-			headers: map[string]string{
-				"Foo": "Bar",
-			},
-			want: map[string]string{
-				"Foo": "Bar",
-			},
-		},
-		{
 			name: "one transformation",
-			rule: main.Rule{
-				Header:       "Test",
-				Value:        "^X-Dest-Header",
-				HeaderPrefix: "^",
+			rule: Rule{
+				OldHeader: "Test",
+				NewHeader: "X-Testing",
 			},
 			headers: map[string]string{
-				"Foo":           "Bar",
-				"Test":          "Success",
-				"X-Dest-Header": "X-Testing",
+				"Foo":              "Bar",
+				"Test":             "Success",
+				"X-Dest-OldHeader": "X-Testing",
 			},
 			want: map[string]string{
-				"Foo":           "Bar",
-				"X-Dest-Header": "X-Testing",
-				"X-Testing":     "Success",
+				"Foo":              "Bar",
+				"X-Dest-OldHeader": "X-Testing",
+				"X-Testing":        "Success",
 			},
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			cfg := CreateConfig()
-			cfg.Rules = []main.Rule{tt.rule}
+			cfg.Rules = []Rule{tt.rule}
 
 			ctx := context.Background()
 			next := http.HandlerFunc(func(_ http.ResponseWriter, _ *http.Request) {})

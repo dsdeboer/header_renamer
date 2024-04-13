@@ -13,7 +13,6 @@ http:
                 traefik_header_rename:
                     Rules:
                         -   Rule:
-                            Name: 'Header transformation'
-                            Header: 'The-Old-Header'
-                            Value: 'The-New-Header'
+                            OldHeader: 'The-Old-Header'
+                            NewHeader: 'The-New-Header'
 ```

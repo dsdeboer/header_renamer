@@ -5,7 +5,6 @@ import (
 	"context"
 	"net/http"
 	"regexp"
-	"strings"
 )
 
 // New created a new HeaderRenamer plugin.
@@ -34,7 +33,7 @@ type HeaderRenamer struct {
 func (u *HeaderRenamer) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
 	for _, rule := range u.rules {
 		for headerName, headerValues := range req.Header {
-			matched, err := regexp.MatchString(rule.Header, headerName)
+			matched, err := regexp.MatchString(rule.OldHeader, headerName)
 			if err != nil {
 				http.Error(rw, err.Error(), http.StatusInternalServerError)
 
@@ -43,30 +42,12 @@ func (u *HeaderRenamer) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
 			if matched {
 				req.Header.Del(headerName)
 				for _, val := range headerValues {
-					req.Header.Set(GetValue(rule.Value, rule.HeaderPrefix, req), val)
+					req.Header.Set(rule.NewHeader, val)
 				}
 			}
 		}
 	}
 	u.next.ServeHTTP(rw, req)
-}
-
-// GetValue checks if prefix exists
-// the given prefix is present, and then proceeds to read
-// the existing header (after stripping the prefix) to return as value.
-func GetValue(ruleValue, valueIsHeaderPrefix string, req *http.Request) string {
-	actualValue := ruleValue
-	if valueIsHeaderPrefix != "" && strings.HasPrefix(ruleValue, valueIsHeaderPrefix) {
-		header := strings.TrimPrefix(ruleValue, valueIsHeaderPrefix)
-		// If the resulting value after removing the prefix is empty (value was only prefix),
-		// we return the actual value, which is the prefix itself.
-		// This is because doing a req.Header.Get("") would not fly well.
-		if header != "" {
-			actualValue = req.Header.Get(header)
-		}
-	}
-
-	return actualValue
 }
 
 // Config holds configuration to be passed to the plugin.
@@ -76,10 +57,6 @@ type Config struct {
 
 // Rule struct so that we get traefik config.
 type Rule struct {
-	Name         string   `yaml:"name"`
-	Header       string   `yaml:"header"`
-	Value        string   `yaml:"value"`
-	Values       []string `yaml:"values"`
-	HeaderPrefix string   `yaml:"headerPrefix"`
-	Sep          string   `yaml:"sep"`
+	OldHeader string `yaml:"old-header"`
+	NewHeader string `yaml:"new-header"`
 }
