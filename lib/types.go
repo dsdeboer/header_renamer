@@ -1,4 +1,4 @@
-package types
+package lib
 
 // Config holds configuration to be passed to the plugin.
 type Config struct {

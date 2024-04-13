@@ -11,13 +11,13 @@ import (
 func TestHeaderRename(t *testing.T) {
 	tests := []struct {
 		name    string
-		rule    types.Rule
+		rule    lib.Rule
 		headers map[string]string
 		want    map[string]string
 	}{
 		{
 			name: "no transformation",
-			rule: types.Rule{
+			rule: lib.Rule{
 				Header: "not-existing",
 			},
 			headers: map[string]string{
@@ -29,7 +29,7 @@ func TestHeaderRename(t *testing.T) {
 		},
 		{
 			name: "one transformation",
-			rule: types.Rule{
+			rule: lib.Rule{
 				Header: "Test",
 				Value:  "X-Testing",
 			},
@@ -44,7 +44,7 @@ func TestHeaderRename(t *testing.T) {
 		},
 		{
 			name: "Deletion",
-			rule: types.Rule{
+			rule: lib.Rule{
 				Header: "Test",
 			},
 			headers: map[string]string{
@@ -58,7 +58,7 @@ func TestHeaderRename(t *testing.T) {
 		},
 		{
 			name: "no transformation with HeaderPrefix",
-			rule: types.Rule{
+			rule: lib.Rule{
 				Header:       "not-existing",
 				Value:        "^unused",
 				HeaderPrefix: "^",
@@ -72,7 +72,7 @@ func TestHeaderRename(t *testing.T) {
 		},
 		{
 			name: "one transformation",
-			rule: types.Rule{
+			rule: lib.Rule{
 				Header:       "Test",
 				Value:        "^X-Dest-Header",
 				HeaderPrefix: "^",
@@ -91,10 +91,10 @@ func TestHeaderRename(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			cfg := &types.Config{
-				Rules: []types.Rule{},
+			cfg := &lib.Config{
+				Rules: []lib.Rule{},
 			}
-			cfg.Rules = []types.Rule{tt.rule}
+			cfg.Rules = []lib.Rule{tt.rule}
 
 			ctx := context.Background()
 			next := http.HandlerFunc(func(_ http.ResponseWriter, _ *http.Request) {})

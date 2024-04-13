@@ -6,11 +6,10 @@ import (
 	"github.com/dsdeboer/traefik-header-rename/lib"
 	"net/http"
 	"regexp"
-	"strings"
 )
 
 // New created a new HeaderRenamer plugin.
-func New(_ context.Context, next http.Handler, config *types.Config, name string) (http.Handler, error) {
+func New(_ context.Context, next http.Handler, config *lib.Config, name string) (http.Handler, error) {
 	return &HeaderRenamer{
 		rules: config.Rules,
 		next:  next,
@@ -21,7 +20,7 @@ func New(_ context.Context, next http.Handler, config *types.Config, name string
 // HeaderRenamer holds the necessary components of a Traefik plugin.
 type HeaderRenamer struct {
 	next  http.Handler
-	rules []types.Rule
+	rules []lib.Rule
 	name  string
 }
 
@@ -37,28 +36,10 @@ func (u *HeaderRenamer) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
 			if matched {
 				req.Header.Del(headerName)
 				for _, val := range headerValues {
-					req.Header.Set(GetValue(rule.Value, rule.HeaderPrefix, req), val)
+					req.Header.Set(lib.GetValue(rule.Value, rule.HeaderPrefix, req), val)
 				}
 			}
 		}
 	}
 	u.next.ServeHTTP(rw, req)
-}
-
-// GetValue checks if prefix exists
-// the given prefix is present, and then proceeds to read
-// the existing header (after stripping the prefix) to return as value.
-func GetValue(ruleValue, valueIsHeaderPrefix string, req *http.Request) string {
-	actualValue := ruleValue
-	if valueIsHeaderPrefix != "" && strings.HasPrefix(ruleValue, valueIsHeaderPrefix) {
-		header := strings.TrimPrefix(ruleValue, valueIsHeaderPrefix)
-		// If the resulting value after removing the prefix is empty (value was only prefix),
-		// we return the actual value, which is the prefix itself.
-		// This is because doing a req.Header.Get("") would not fly well.
-		if header != "" {
-			actualValue = req.Header.Get(header)
-		}
-	}
-
-	return actualValue
 }
