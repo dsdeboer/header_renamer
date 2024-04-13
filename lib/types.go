@@ -1,5 +1,10 @@
 package types
 
+// Config holds configuration to be passed to the plugin.
+type Config struct {
+	Rules []Rule
+}
+
 // Rule struct so that we get traefik config.
 type Rule struct {
 	Name         string   `yaml:"name"`

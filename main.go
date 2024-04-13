@@ -3,7 +3,7 @@ package traefik_header_rename
 
 import (
 	"context"
-	"github.com/dsdeboer/traefik-header-rename/lib/types"
+	"github.com/dsdeboer/traefik-header-rename/lib"
 	"net/http"
 	"regexp"
 	"strings"
