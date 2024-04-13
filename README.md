@@ -16,5 +16,4 @@ http:
                             Name: 'Header transformation'
                             Header: 'The-Old-Header'
                             Value: 'The-New-Header'
-                            Type: 'Rename'
 ```
