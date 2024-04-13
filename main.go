@@ -17,6 +17,13 @@ func New(_ context.Context, next http.Handler, config *lib.Config, name string) 
 	}, nil
 }
 
+// CreateConfig populates the Config data object.
+func CreateConfig() *lib.Config {
+	return &lib.Config{
+		Rules: []lib.Rule{},
+	}
+}
+
 // HeaderRenamer holds the necessary components of a Traefik plugin.
 type HeaderRenamer struct {
 	next  http.Handler
