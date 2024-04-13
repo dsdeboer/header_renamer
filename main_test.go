@@ -91,7 +91,9 @@ func TestHeaderRename(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			cfg := CreateConfig()
+			cfg := &types.Config{
+				Rules: []types.Rule{},
+			}
 			cfg.Rules = []types.Rule{tt.rule}
 
 			ctx := context.Background()

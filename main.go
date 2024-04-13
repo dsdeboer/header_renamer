@@ -9,13 +9,6 @@ import (
 	"strings"
 )
 
-// CreateConfig populates the Config data object.
-func CreateConfig() *types.Config {
-	return &types.Config{
-		Rules: []types.Rule{},
-	}
-}
-
 // New created a new HeaderRenamer plugin.
 func New(_ context.Context, next http.Handler, config *types.Config, name string) (http.Handler, error) {
 	return &HeaderRenamer{
