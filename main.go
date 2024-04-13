@@ -3,30 +3,21 @@ package traefik_header_rename
 
 import (
 	"context"
+	"github.com/dsdeboer/traefik-header-rename/lib/types"
 	"net/http"
 	"regexp"
 	"strings"
 )
 
-// Rule struct so that we get traefik config.
-type Rule struct {
-	Name         string   `yaml:"name"`
-	Header       string   `yaml:"header"`
-	Value        string   `yaml:"value"`
-	Values       []string `yaml:"values"`
-	HeaderPrefix string   `yaml:"headerPrefix"`
-	Sep          string   `yaml:"sep"`
-}
-
 // Config holds configuration to be passed to the plugin.
 type Config struct {
-	Rules []Rule
+	Rules []types.Rule
 }
 
 // CreateConfig populates the Config data object.
 func CreateConfig() *Config {
 	return &Config{
-		Rules: []Rule{},
+		Rules: []types.Rule{},
 	}
 }
 
@@ -42,7 +33,7 @@ func New(_ context.Context, next http.Handler, config *Config, name string) (htt
 // HeaderRenamer holds the necessary components of a Traefik plugin.
 type HeaderRenamer struct {
 	next  http.Handler
-	rules []Rule
+	rules []types.Rule
 	name  string
 }
 

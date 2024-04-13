@@ -2,6 +2,7 @@ package traefik_header_rename
 
 import (
 	"context"
+	"github.com/dsdeboer/traefik-header-rename/lib/types"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -10,13 +11,13 @@ import (
 func TestHeaderRename(t *testing.T) {
 	tests := []struct {
 		name    string
-		rule    Rule
+		rule    types.Rule
 		headers map[string]string
 		want    map[string]string
 	}{
 		{
 			name: "[Rename] no transformation",
-			rule: Rule{
+			rule: types.Rule{
 				Header: "not-existing",
 			},
 			headers: map[string]string{
@@ -28,7 +29,7 @@ func TestHeaderRename(t *testing.T) {
 		},
 		{
 			name: "[Rename] one transformation",
-			rule: Rule{
+			rule: types.Rule{
 				Header: "Test",
 				Value:  "X-Testing",
 			},
@@ -43,7 +44,7 @@ func TestHeaderRename(t *testing.T) {
 		},
 		{
 			name: "[Rename] Deletion",
-			rule: Rule{
+			rule: types.Rule{
 				Header: "Test",
 			},
 			headers: map[string]string{
@@ -57,7 +58,7 @@ func TestHeaderRename(t *testing.T) {
 		},
 		{
 			name: "[Rename] no transformation with HeaderPrefix",
-			rule: Rule{
+			rule: types.Rule{
 				Header:       "not-existing",
 				Value:        "^unused",
 				HeaderPrefix: "^",
@@ -71,7 +72,7 @@ func TestHeaderRename(t *testing.T) {
 		},
 		{
 			name: "[Rename] one transformation",
-			rule: Rule{
+			rule: types.Rule{
 				Header:       "Test",
 				Value:        "^X-Dest-Header",
 				HeaderPrefix: "^",
@@ -91,7 +92,7 @@ func TestHeaderRename(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			cfg := CreateConfig()
-			cfg.Rules = []Rule{tt.rule}
+			cfg.Rules = []types.Rule{tt.rule}
 
 			ctx := context.Background()
 			next := http.HandlerFunc(func(_ http.ResponseWriter, _ *http.Request) {})
